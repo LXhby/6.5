@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    body,dl,dd,p,h1,h2,h3,h4,h5,h6{margin:0;}
+    ol,ul,li{margin:0;padding:0;list-style:none;}
+    img{border:none;vertical-align:top;}
+    .box{
+      position: relative;
+      overflow: hidden;
+      width: 800px;
+      height: 500px;
+      margin: 50px auto;
+    }
+    .box ul{
+      position: absolute;
+      width: 4800px;
+    }
+    ul li{
+      float: left;
+    }
+    ul li img{
+      width: 800px;
+    }
+    .box p{
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      width: 65px;
+      height: 55px;
+      background-color:rgba(0,0,0,.5);
+      font-size: 30px;
+      line-height: 55px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .box .left{
+      left: 0;
+    }
+    .box .right{
+      right: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <ul class="images">
+      <li><img src="images/1.jpeg" alt=""></li>
+      <li><img src="images/2.jpg" alt=""></li>
+      <li><img src="images/3.jpg" alt=""></li>
+      <li><img src="images/4.jpg" alt=""></li>
+      <li><img src="images/5.jpg" alt=""></li>
+      <li><img src="images/6.jpg" alt=""></li>
+    </ul>
+    <p class="left">&lt</p>
+    <p class="right">&gt</p>
+  </div>
+</body>
+<script>
+  var oImage =document.getElementsByClassName("images")[0],
+  oRight =document.getElementsByClassName("right")[0],
+  oLeft =document.getElementsByClassName("left")[0],
+  n=0;
+  oRight.onclick =forward;
+  oLeft.onclick =backward;
+  function forward(){
+      n++;
+      if (n >= 6) {
+          n = 0;//此时start为-800*5，value值为0
+      }
+      animation(oImage,"left",-800*n,-20);
+  }
+  function backward(){
+      n--;
+      if (n<0){//此时start为0，value值为-800*5
+          n=5;
+      }
+      animation(oImage,"left",-800*n,20);
+  }
+  function animation(ele,attr,value,step) {
+      var start = parseFloat(getstyle(ele)[attr]);
+      var direction = start >= value;//当后退时  为true
+      if (n==0||n==5){
+          start=value;
+      }
+      function fn() {
+          if (direction?start <= value:start>=value) {
+              start = value;
+              oImage.style.left = start + "px";
+          } else {
+              start += step;
+              oImage.style[attr] = start + "px";
+              requestAnimationFrame(fn);
+          }
+      }
+      fn();
+
+  }
+  function getstyle(ele) {
+      return ele.currentStyle||getComputedStyle(ele);
+  }
+
+</script>
+</html>
