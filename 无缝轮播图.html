@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    li{
+      list-style: none;
+    }
+    .banner{
+      position: relative;
+      overflow: hidden;
+      margin: auto;
+      width: 1000px;
+    }
+    .pic{
+      position: relative;
+      width: 1000%;
+      overflow: hidden;
+    }
+    .pic li{
+      float: left;
+      width: 10%;
+    }
+    .pic li img{
+      display: block;
+      width: 100%;
+    }
+    .btns{
+      position: absolute;
+      bottom: 50%;
+      width: 100%;
+      height: 0;
+    }
+    .btns span{
+      float: left;
+      width: 50px;
+      line-height: 50px;
+      text-align: center;
+      font-family:"宋体";
+      font-size: 30px;
+      color:red;
+      background-color: rgba(255,255,255,.5);
+    }
+    .btns span + span{
+      float: right;
+    }
+    .pic-num{
+      position: absolute;
+      width: 100%;
+      bottom:20px;
+      font-size: 0;
+      text-align: center;
+    }
+    .pic-num li{
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin: 0 8px;
+      border-radius: 50%;
+      background-color:blue;
+    }
+    .pic-num li.on{
+      background-color:pink;
+    }
+    .pic-num li:hover{
+      background-color:pink;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="banner">
+  <div>
+    <ul class="pic">
+      <li><a href=""><img src="images/1.jpeg" alt=""></a></li>
+      <li><a href=""><img src="images/2.jpg" alt=""></a></li>
+      <li><a href=""><img src="images/3.jpg" alt=""></a></li>
+      <li><a href=""><img src="images/4.jpg" alt=""></a></li>
+    </ul>
+  </div>
+  <div class="btns">
+    <span>&lt;</span>
+    <span>&gt;</span>
+  </div>
+  <ul class="pic-num">
+
+  </ul>
+</div>
+</body>
+<script src="animation.js"></script>
+<script>
+    var oBanner =document.querySelector(".banner"),
+        opic =oBanner.querySelector(".pic"),
+        oPicLi =opic.querySelectorAll("li"),
+        oBtns =oBanner.querySelectorAll(".btns span"),
+        oPicNum =oBanner.querySelector(".pic-num");
+
+    //定义运动的变量
+    var _length =oPicLi.length,
+        _width =oBanner.offsetWidth,
+        index=0,
+        _status =true;
+
+    //复制一份图片
+    opic.innerHTML +=opic.innerHTML;
+
+
+    //要添加事件绑定 创建节点方式
+    for(var i=0;i<_length;i++){
+         var thatLi =document.createElement("li");
+         thatLi.index =i;
+         thatLi.onclick=function(){
+             opicNumLi[index].className ="";//原来显示的图片小圆点颜色消失
+             index=this.index;//此时的index就是小圆点的索引 因为小圆点的索引对应着图片的索引  所以下面可以直接赋值
+             opicNumLi[index].className ="on";//点击的圆点状态为on
+             move();
+         }
+        oPicNum.appendChild(thatLi);
+    }
+    var opicNumLi =oPicNum.querySelectorAll("li");
+    opicNumLi[index].className ="on";
+
+
+    //上一张
+    oBtns[0].onclick =function(){
+        if (_status){
+            opicNumLi[index].className ="";
+           index--;
+            if(index<0){
+                opic.style.left =-_length* _width+"px";
+                index=_length-1;
+            }
+            opicNumLi[index].className ="on";
+            move();
+        }
+
+    }
+    oBtns[1].onclick =function(){
+        if (_status){
+            opicNumLi[index].className ="";
+            index++;
+            opicNumLi[index%_length].className ="on"; //当它大于_length  就设置为0
+            move();
+        }
+
+    }
+    //运动函数
+    function move() {
+            _status =false;//开关关闭
+        animation(opic,{
+            left : index * -_width
+        },{
+            duration : 600
+        },function () {
+            _status =true;//动画执行完才打开开关
+            if (index>=_length){
+                index=0;
+                this.style.left =0;//因为直接设置css，速度是非常快的，肉眼看不到效果
+            }
+        })
+    }
+
+
+</script>
+</html>
