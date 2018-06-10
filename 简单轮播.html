@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        li{
+            list-style: none;
+        }
+        .banner{
+            position: relative;
+            overflow: hidden;
+            margin: auto;
+            width: 1000px;
+        }
+        .pic{
+            position: relative;
+            width: 1000%;
+            overflow: hidden;
+        }
+        .pic li{
+            float: left;
+            width: 10%;
+        }
+        .pic li img{
+            display: block;
+            width: 100%;
+        }
+        .btns{
+            position: absolute;
+            bottom: 50%;
+            width: 100%;
+            height: 0;
+        }
+        .btns span{
+            float: left;
+            width: 50px;
+            line-height: 50px;
+            text-align: center;
+            font-family:"宋体";
+            font-size: 30px;
+            color:red;
+            background-color: rgba(255,255,255,.5);
+        }
+        .btns span + span{
+            float: right;
+        }
+        .pic-num{
+            position: absolute;
+            width: 100%;
+            bottom:20px;
+            font-size: 0;
+            text-align: center;
+        }
+        .pic-num li{
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin: 0 8px;
+            border-radius: 50%;
+            background-color:blue;
+        }
+        .pic-num li.on{
+            background-color:pink;
+        }
+        .pic-num li:hover{
+            background-color:pink;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <div class="pic">
+            <ul>
+                <li><a href=""><img src="images/1.jpeg" alt=""></a></li>
+                <li><a href=""><img src="images/2.jpg" alt=""></a></li>
+                <li><a href=""><img src="images/3.jpg" alt=""></a></li>
+                <li><a href=""><img src="images/4.jpg" alt=""></a></li>
+            </ul>
+        </div>
+        <div class="btns">
+            <span>&lt;</span>
+            <span>&gt;</span>
+        </div>
+        <ul class="pic-num">
+        
+        </ul>
+    </div>
+</body>
+<script src="animation.js"></script>
+<script>
+    var oBanner =document.querySelector(".banner"),
+        opic =oBanner.querySelector(".pic"),
+        oPicLi =opic.querySelectorAll("li"),
+        oBtns =oBanner.querySelectorAll(".btns span"),
+        oPicNum =oBanner.querySelector(".pic-num");
+       
+        //定义运动的变量
+        var _length =oPicLi.length,
+            _width =oBanner.offsetWidth,
+            index=0,
+            upper=0;
+
+
+
+        //生成小点按钮 创建li节点
+        var opicNumLi =new Array(_length+1);
+        oPicNum.innerHTML = opicNumLi.join("<li></li>");
+        opicNumLi=oPicNum.querySelectorAll("li");//覆盖了而已
+        console.log(opicNumLi);
+        /*
+        for(var i=0;i<_length;i++){
+             oPicNum.innerHTML +="<li></li>";
+        }
+        
+        */
+
+
+
+            //上一张
+            oBtns[0].onclick =function(){
+                opicNumLi[index].className ="";
+                index--;
+                if(index<0){
+                    index=_length-1;
+                }
+                // opicNumLi[upper].className ="";
+                opicNumLi[index].className ="on";
+                // upper =index;
+                move();
+            }
+            oBtns[1].onclick =function(){
+                opicNumLi[index].className ="";
+                index++;
+               
+                //当它大于_length  就设置为0
+                index%=_length;
+                // opicNumLi[upper].className ="";
+                opicNumLi[index].className ="on";
+                // upper =index;
+                move();
+            }
+        //运动函数
+        function move() {
+
+        animation(opic,{
+            left : index * -_width
+        },{
+            duration : 600
+        })
+        }
+
+
+</script>
+</html>
