@@ -155,7 +155,7 @@ function animation(ele,attr,time,callback){
     //遍历json数据并设置到startValue
     for(var key in attr){
 
-        //判断是不是一个josn数据,如果是对象
+        //判断是不是一个josn数据
         if(typeof attr[key] === 'object'){
 
             //启动start函数进行设置

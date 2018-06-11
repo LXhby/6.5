@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    body,dl,dd,p,h1,h2,h3,h4,h5,h6{margin:0;}
+    ol,ul,li{margin:0;padding:0;list-style:none;}
+    img{border:none;vertical-align:top;}
+    .banner{
+      position: relative;
+      margin: auto;
+      border:1px solid;
+    }
+    .fragment{
+      overflow: hidden;
+    }
+    .fragment i{
+      position: relative;
+      float: left;
+      background:url("images/1.jpeg");
+      background-repeat: no-repeat;
+    }
+    .btns{
+      position: absolute;
+      bottom: 50%;
+      width: 100%;
+      height: 0;
+    }
+    .btns span{
+      float: left;
+      width: 50px;
+      text-align: center;
+      line-height: 50px;
+      font-size: 30px;
+      font-family: "宋体";
+      color:#121212;
+      background-color:rgba(255,255,255,.5);
+      cursor: pointer;
+    }
+    .btns span + span{
+      float: right;
+    }
+  </style>
+</head>
+<body>
+    <div class="banner">
+      <div class="fragment">
+      </div>
+      <div class="btns">
+        <span>&lt</span>
+        <span>&gt</span>
+      </div>
+    </div>
+</body>
+<script src="animation.js"></script>
+<script src="tween.js"></script>
+<script>
+  fragmentBanner();
+  function fragmentBanner() {
+      var oBanner =document.querySelector(".banner");
+      var oFragment =oBanner.querySelector(".fragment"),
+          oFragmentI =oFragment.getElementsByTagName("i"),
+          oBtns =oBanner.querySelectorAll(".btns span");
+      //定义属性值
+      var bannerAttr ={
+          width:1000,
+          height:560,
+      };
+      var grid={
+          list:10,
+           column:10
+      },
+       oIAttr ={
+           width:bannerAttr.width/grid.column,
+            height:bannerAttr.height/grid.list,
+       };
+      var index=0,
+          imgs =["images/1.jpeg","images/2.jpg","images/3.jpg","images/4.jpg"];
+
+      //献给banner设置宽高
+      oBanner.style.width =bannerAttr.width+"px";
+      oBanner.style.height =bannerAttr.height+"px";
+
+      //创建行
+      for (var i=0;i<grid.list;i++){
+
+          for (var j=0;j<grid.column;j++){
+              var thatI =document.createElement("i");
+              thatI.style.width =oIAttr.width+"px";
+              thatI.style.height =oIAttr.height+"px";
+
+              //设置定位
+              thatI.style.backgroundPositionX =-j*oIAttr.width+"px";
+              thatI.style.backgroundPositionY =-i*oIAttr.height+"px";
+              thatI.style.backgroundSize =bannerAttr.width+"px "+bannerAttr.height+"px";
+              thatI.style.backgroundImage ="url("+imgs[index]+")";
+
+              oFragment.appendChild(thatI);
+          }
+      }
+      oBtns[1].onclick=function(){
+          index++;
+          index%=imgs.length;
+          move();
+      };
+      oBtns[0].onclick=function(){
+          index--;
+         if (index<0){
+             index =imgs.length-1;
+         }
+          move();
+      };
+      //运动函数
+
+     // function move() {
+      //     for (var i=0,iL =oFragmentI.length;i<iL;i++) {
+      //
+      //         animation(oFragmentI[i], {
+      //             left: parseInt(Math.random() * 2 * bannerAttr.width) - bannerAttr.width,
+      //             top: parseInt(Math.random() * 2 * bannerAttr.height) - bannerAttr.height,
+      //             opacity: 0
+      //         }, {
+      //             duration: 1000
+      //         },function () {
+      //             this.style.backgroundImage ="url("+imgs[index]+")";
+      //             animation(this,{
+      //                 left:0,
+      //                 top:0,
+      //                 opacity:1
+      //             },{
+      //                 duration:parseInt(Math.random()*500+500)//500-1000内
+      //             })
+      //         })
+      //     }
+      // }
+      // function move() {
+      //     for (var i=0,iL =oFragmentI.length;i<iL;i++) {
+      //
+      //         animation(oFragmentI[i], {
+      //             left: parseInt(Math.random() * 2 * bannerAttr.width) - bannerAttr.width,
+      //             top: parseInt(Math.random() * 2 * bannerAttr.height) - bannerAttr.height,
+      //             opacity: 0
+      //         }, {
+      //             duration: 1000,
+      //             delay:parseInt(Math.random()*1000)+500
+      //         },function () {
+      //             this.style.backgroundImage ="url("+imgs[index]+")";
+      //             animation(this,{
+      //                 left:0,
+      //                 top:0,
+      //                 opacity:1
+      //             },{
+      //                 duration:1000,
+      //                 delay:parseInt(Math.random()*1000)+500
+      //             })
+      //         })
+      //     }
+      // }
+
+
+      function move() {
+          for (var i=0,iL =oFragmentI.length;i<iL;i++) {
+
+              animation(oFragmentI[i], {
+                  left: parseInt(Math.random() * 2 * bannerAttr.width) - bannerAttr.width,
+                  top: parseInt(Math.random() * 2 * bannerAttr.height) - bannerAttr.height,
+                  opacity: 0,
+                  transform: {
+                      start: function () {
+                          return {
+                              rotateX: {
+                                  start: 0,
+                                  change: parseInt(Math.random()*360)+360
+                              },
+                              rotateY: {
+                                  start: 0,
+                                  change: parseInt(Math.random()*360)+360
+                              },
+                              rotate: {
+                                  start: 0,
+                                  change: parseInt(Math.random()*360)+360
+                              }
+                          };
+                      },
+                      up: function (start, now, duration, key, timingFn) {
+
+                          var transform = "";
+                          for (var attr in start) {
+
+                              transform += attr + '(' + timingFn(now, start[attr].start, start[attr].change, duration) + 'deg)';
+                          }
+                          this.style.transform = transform;
+                      }
+                  }
+              }, {
+                  duration: parseInt(Math.random()*1000)+1000,
+              },function () {
+                  this.style.backgroundImage ="url("+imgs[index]+")";
+                  animation(this,{
+                      left:0,
+                      top:0,
+                      opacity:1,
+                      transform:{
+                          start:function () {
+                              var rotateX = parseInt(Math.random() * 360) + 360,
+                                  rotateY = parseInt(Math.random() * 360) + 360,
+                                  rotate = parseInt(Math.random() * 360) + 360;
+                              return{
+                                  rotateX:{
+                                      start:rotateX,
+                                      change:-rotateX
+                                  },
+                                  rotateY:{
+                                      start:rotateY,
+                                      change:-rotateY
+                                  },
+                                  rotate:{
+                                      start: rotate,
+                                      change: -rotate
+                                  }
+                              };
+                          },
+                          up : function(start,now,duration,key,timingFn){
+
+                              var transform = "";
+                              for(var attr in start){
+
+                                  transform += attr+'('+timingFn(now,start[attr].start,start[attr].change,duration)+'deg)';
+                              }
+                              this.style.transform = transform;
+                          }
+                      }
+                  },{
+                      duration:parseInt(Math.random()*1000)+1000,
+                  })
+              })
+          }
+      }
+  }
+</script>
+</html>
